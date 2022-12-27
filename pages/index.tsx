@@ -5,6 +5,11 @@ export default function Home() {
   const [values, setValues] = useState("");
   const [result, setResults] = useState<string[]>([]);
 
+  const handleReset = () => {
+    setResults([]);
+    setValues("");
+  };
+
   const getData = async () => {
     let search = values.split("\n");
 
@@ -84,7 +89,7 @@ export default function Home() {
             margin: 14,
           }}
         >
-          GO
+          주소변환
         </button>
         <div
           style={{
@@ -103,6 +108,16 @@ export default function Home() {
           ))}
         </div>
       </div>
+      <button
+        onClick={handleReset}
+        style={{
+          width: 120,
+          height: 50,
+          margin: 14,
+        }}
+      >
+        초기화
+      </button>
     </div>
   );
 }
