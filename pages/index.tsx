@@ -33,7 +33,7 @@ export default function Home() {
             resultArray.push(
               res.data.items.length === 0
                 ? "결과가 검색되지 않았습니다."
-                : res.data.items[0].address
+                : res.data.items[0].roadAddress
             );
           }
         }
@@ -54,7 +54,7 @@ export default function Home() {
         flexDirection: "column",
       }}
     >
-      <h1>강영우 메롱</h1>
+      <h1>주소지 변환</h1>
       <div
         style={{
           display: "flex",
