@@ -4,7 +4,8 @@ import { useState } from "react";
 export default function Home() {
   const [values, setValues] = useState("");
   const [result, setResults] = useState<string[]>([]);
-
+  const [valuesCount, setValuesCount] = useState(0);
+  const [resultsCount, setResultsCount] = useState(0);
   const handleReset = () => {
     setResults([]);
     setValues("");
@@ -12,7 +13,7 @@ export default function Home() {
 
   const getData = async () => {
     let search = values.split("\n");
-
+    setValuesCount(search.length);
     let resultArray: string[] = [];
 
     for (let j = 0; j < Math.ceil(search.length / 9); j++) {
@@ -32,13 +33,14 @@ export default function Home() {
 
             resultArray.push(
               res.data.items.length === 0
-                ? "결과가 검색되지 않았습니다."
+                ? `${search[i + 9 * j]}-검색 실패`
                 : res.data.items[0].roadAddress
             );
           }
         }
         setResults(result.concat(resultArray));
-      }, 1000 * j);
+        setResultsCount(result.concat(resultArray).length);
+      }, 1500 * j);
     }
   };
 
@@ -54,7 +56,6 @@ export default function Home() {
         flexDirection: "column",
       }}
     >
-      <h1>주소지 변환</h1>
       <div
         style={{
           display: "flex",
@@ -63,61 +64,88 @@ export default function Home() {
           height: "500px",
         }}
       >
-        <textarea
-          onChange={(e) => {
-            setValues(e.target.value);
-          }}
-          value={values}
-          style={{
-            resize: "none",
-            height: "100%",
-            width: 294,
-            outline: "none",
-            padding: 0,
-            border: "solid 1px black",
-            fontFamily: "-moz-initial",
-            fontSize: 14,
-            lineHeight: "170%",
-          }}
-        />
-        <button
-          disabled={values.length === 0}
-          onClick={getData}
-          style={{
-            width: 120,
-            height: 50,
-            margin: 14,
-          }}
-        >
-          주소변환
-        </button>
         <div
           style={{
             height: "100%",
-            width: 300,
-            border: "solid 1px black",
-            fontFamily: "-moz-initial",
-            fontSize: 14,
-            textAlign: "left",
-            lineHeight: "170%",
-            overflowY: "scroll",
           }}
         >
-          {result.map((ele, idx) => (
-            <div key={idx + "result"}>{ele}</div>
-          ))}
+          <h2>입력 개수 : {valuesCount}</h2>
+          <textarea
+            onChange={(e) => {
+              setValues(e.target.value);
+            }}
+            value={values}
+            style={{
+              resize: "none",
+              height: "100%",
+              width: 394,
+              outline: "none",
+              padding: 0,
+              border: "solid 1px black",
+              fontFamily: "-moz-initial",
+              fontSize: 14,
+              lineHeight: "170%",
+            }}
+          />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            margin: 20,
+            gap: 40,
+          }}
+        >
+          <button
+            disabled={values.length === 0}
+            onClick={getData}
+            style={{
+              width: 120,
+              height: 50,
+            }}
+          >
+            주소변환
+          </button>
+          <button
+            onClick={handleReset}
+            style={{
+              width: 120,
+              height: 50,
+            }}
+          >
+            초기화
+          </button>
+        </div>
+
+        <div
+          style={{
+            height: "100%",
+          }}
+        >
+          <h2>출력 개수 : {resultsCount}</h2>
+          <div
+            style={{
+              height: "100%",
+              width: 600,
+              border: "solid 1px black",
+              fontFamily: "-moz-initial",
+              fontSize: 14,
+              textAlign: "left",
+              lineHeight: "170%",
+              overflowY: "scroll",
+            }}
+          >
+            {result.map((ele, idx) => (
+              <div
+                key={idx + "result"}
+                className={ele.includes("검색 실패") ? "red" : ""}
+              >
+                {ele}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-      <button
-        onClick={handleReset}
-        style={{
-          width: 120,
-          height: 50,
-          margin: 14,
-        }}
-      >
-        초기화
-      </button>
     </div>
   );
 }
