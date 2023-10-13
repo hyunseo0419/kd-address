@@ -1,18 +1,18 @@
-import axios from "axios";
-import { useState } from "react";
+import axios from 'axios';
+import { useState } from 'react';
 
 export default function Home() {
-  const [values, setValues] = useState("");
+  const [values, setValues] = useState('');
   const [result, setResults] = useState<string[]>([]);
   const [valuesCount, setValuesCount] = useState(0);
   const [resultsCount, setResultsCount] = useState(0);
   const handleReset = () => {
     setResults([]);
-    setValues("");
+    setValues('');
   };
 
   const getData = async () => {
-    let search = values.split("\n");
+    let search = values.split('\n');
     setValuesCount(search.length);
     let resultArray: string[] = [];
 
@@ -20,20 +20,22 @@ export default function Home() {
       setTimeout(async () => {
         for (let i = 0; i < 9; i++) {
           if (search[i + 9 * j]) {
-            let res = await axios.get("/v1/search/local.json", {
+            let res = await axios.get('/v1/search/local.json', {
               params: {
                 query: search[i + 9 * j],
                 display: 1,
               },
               headers: {
-                "X-Naver-Client-Id": process.env.NEXT_PUBLIC_ID_KEY,
-                "X-Naver-Client-Secret": process.env.NEXT_PUBLIC_SECRET_KEY,
+                'X-Naver-Client-Id': process.env.NEXT_PUBLIC_ID_KEY,
+                'X-Naver-Client-Secret': process.env.NEXT_PUBLIC_SECRET_KEY,
               },
             });
 
             resultArray.push(
               res.data.items.length === 0
                 ? `${search[i + 9 * j]}-검색 실패`
+                : res.data.items[0].roadAddress.length === 0
+                ? res.data.items[0].address
                 : res.data.items[0].roadAddress
             );
           }
@@ -48,25 +50,25 @@ export default function Home() {
     <div
       className="App"
       style={{
-        height: "100vh",
-        width: "100vw",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "column",
+        height: '100vh',
+        width: '100vw',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
       }}
     >
       <div
         style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "500px",
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '500px',
         }}
       >
         <div
           style={{
-            height: "100%",
+            height: '100%',
           }}
         >
           <h2>입력 개수 : {valuesCount}</h2>
@@ -76,22 +78,22 @@ export default function Home() {
             }}
             value={values}
             style={{
-              resize: "none",
-              height: "100%",
+              resize: 'none',
+              height: '100%',
               width: 394,
-              outline: "none",
+              outline: 'none',
               padding: 0,
-              border: "solid 1px black",
-              fontFamily: "-moz-initial",
+              border: 'solid 1px black',
+              fontFamily: '-moz-initial',
               fontSize: 14,
-              lineHeight: "170%",
+              lineHeight: '170%',
             }}
           />
         </div>
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
+            display: 'flex',
+            flexDirection: 'column',
             margin: 20,
             gap: 40,
           }}
@@ -119,27 +121,24 @@ export default function Home() {
 
         <div
           style={{
-            height: "100%",
+            height: '100%',
           }}
         >
           <h2>출력 개수 : {resultsCount}</h2>
           <div
             style={{
-              height: "100%",
+              height: '100%',
               width: 600,
-              border: "solid 1px black",
-              fontFamily: "-moz-initial",
+              border: 'solid 1px black',
+              fontFamily: '-moz-initial',
               fontSize: 14,
-              textAlign: "left",
-              lineHeight: "170%",
-              overflowY: "scroll",
+              textAlign: 'left',
+              lineHeight: '170%',
+              overflowY: 'scroll',
             }}
           >
             {result.map((ele, idx) => (
-              <div
-                key={idx + "result"}
-                className={ele.includes("검색 실패") ? "red" : ""}
-              >
+              <div key={idx + 'result'} className={ele.includes('검색 실패') ? 'red' : ''}>
                 {ele}
               </div>
             ))}
